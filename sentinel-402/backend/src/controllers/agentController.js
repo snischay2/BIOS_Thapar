@@ -43,7 +43,7 @@ export async function runWeatherAgentController(req, res) {
 
     return res.status(502).json({
       success: false,
-      service: "SENTINEL-402",
+      service: "TXFORT-402",
       message: "Paid agent request failed",
       reservationId: error.reservationId || null,
       error: error.message

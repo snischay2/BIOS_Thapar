@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
 /**
- * SENTINEL 402 — LOCAL GUARD SELF-ATTACK TEST
+ * TXFORT — LOCAL GUARD SELF-ATTACK TEST
  *
  * Run from backend folder:
- * node ./scripts/test-sentinel-local.mjs
+ * node ./scripts/test-TXFORT-local.mjs
  *
  * Optional custom backend URL:
- * node ./scripts/test-sentinel-local.mjs http://localhost:5000
+ * node ./scripts/test-TXFORT-local.mjs http://localhost:5000
  *
  * IMPORTANT:
  * This script only sends x402 payment challenges.
@@ -27,7 +27,7 @@ import {
 
 const BASE_URL = (
   process.argv[2] ||
-  process.env.SENTINEL_BASE_URL ||
+  process.env.TXFORT_BASE_URL ||
   "http://localhost:5000"
 ).replace(/\/$/, "");
 
@@ -83,7 +83,7 @@ async function postChallenge({
       body: JSON.stringify({
         protocol: PROTOCOL,
         evaluationId: EVALUATION_ID,
-        teamName: "SENTINEL Local Self-Test",
+        teamName: "TXFORT Local Self-Test",
         caseId,
         caseName,
         paymentRequired
@@ -151,7 +151,7 @@ async function main() {
 
   console.log("\n");
   console.log("==========================================");
-  console.log(" SENTINEL 402 — LOCAL GUARD SELF-ATTACK");
+  console.log(" TXFORT — LOCAL GUARD SELF-ATTACK");
   console.log("==========================================");
 
   console.log(`Target: ${ASSESS_URL}`);
@@ -207,7 +207,7 @@ async function main() {
   }
 
   console.log(
-    `Connected: ${health.guard || "SENTINEL"}`
+    `Connected: ${health.guard || "TXFORT"}`
   );
 
   console.log(
@@ -306,10 +306,10 @@ async function main() {
   );
 
   // ----------------------------------------------
-  // STEP 3: SEND ATTACKS TO SENTINEL
+  // STEP 3: SEND ATTACKS TO TXFORT
   // ----------------------------------------------
 
-  console.log("\n[3] Sending challenges to SENTINEL...");
+  console.log("\n[3] Sending challenges to TXFORT...");
   console.log("Requests are sent sequentially.\n");
 
   const results = [];

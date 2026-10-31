@@ -136,7 +136,7 @@ export default function AuthPage({ mode = "login" }) {
             </div>
 
             <div>
-              <strong>SENTINEL <span>402</span></strong>
+              <strong>TXFORT <span>402</span></strong>
               <small>PAYMENT SECURITY PLATFORM</small>
             </div>
           </Link>
@@ -160,7 +160,7 @@ export default function AuthPage({ mode = "login" }) {
 
           <p>
             Your AI agent can make payments.
-            Sentinel makes sure it pays the right person,
+            TXFORT makes sure it pays the right person,
             the right amount, every time.
           </p>
 
@@ -200,7 +200,7 @@ export default function AuthPage({ mode = "login" }) {
           <div className="showcase-brand-icon">
             <ShieldCheck size={23} />
           </div>
-          <strong>SENTINEL <span>402</span></strong>
+          <strong>TXFORT <span>402</span></strong>
         </div>
 
         <div className="auth-box">
@@ -222,7 +222,7 @@ export default function AuthPage({ mode = "login" }) {
             <p>
               {isRegister
                 ? "Create your account and take control of your agent's security."
-                : "Sign in to your Sentinel security command center."}
+                : "Sign in to your TXFORT security command center."}
             </p>
           </div>
 
@@ -323,7 +323,7 @@ export default function AuthPage({ mode = "login" }) {
                 </>
               ) : (
                 <>
-                  {isRegister ? "Create secure account" : "Sign in to Sentinel"}
+                  {isRegister ? "Create secure account" : "Sign in to TXFORT"}
                   <ArrowUpRight size={19} />
                 </>
               )}
@@ -340,7 +340,7 @@ export default function AuthPage({ mode = "login" }) {
           <div className="auth-switch">
             {isRegister
               ? "Already have an account?"
-              : "New to Sentinel?"}
+              : "New to TXFORT?"}
 
             <Link to={isRegister ? "/login" : "/register"}>
               {isRegister ? "Sign in" : "Create account"}
@@ -364,7 +364,7 @@ export default function AuthPage({ mode = "login" }) {
         </div>
 
         <div className="auth-bottom">
-          <span>© 2026 SENTINEL 402</span>
+          <span>© 2026 TXFORT</span>
           <span>BIOS HACKATHON</span>
         </div>
 

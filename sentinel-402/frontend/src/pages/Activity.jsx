@@ -341,7 +341,7 @@ export default function ActivityPage() {
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = "sentinel-402-activity.csv";
+    link.download = "TXFORT-402-activity.csv";
     link.click();
 
     URL.revokeObjectURL(url);
@@ -360,7 +360,7 @@ export default function ActivityPage() {
           <h2>Security <span>activity</span></h2>
 
           <p>
-            Review simulation runs saved by your Sentinel backend.
+            Review simulation runs saved by your TXFORT backend.
             Open an individual run to inspect its stored test results.
           </p>
         </div>
@@ -548,7 +548,7 @@ export default function ActivityPage() {
         <div className="activity-table-footer">
           <span>
             <ShieldCheck size={15} />
-            Data source: Sentinel Red/Blue API
+            Data source: TXFORT Red/Blue API
           </span>
           <span>Maximum requested records: 50</span>
         </div>

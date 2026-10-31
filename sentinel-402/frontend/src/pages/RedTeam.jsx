@@ -411,7 +411,7 @@ export default function RedTeam() {
           <div className="team-report-footer">
             <div>
               <Fingerprint size={17} />
-              Results stored in the Sentinel simulation database
+              Results stored in the TXFORT simulation database
             </div>
             <span>{formatTime(report.createdAt)}</span>
           </div>

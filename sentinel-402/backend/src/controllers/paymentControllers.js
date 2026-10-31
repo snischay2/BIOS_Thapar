@@ -40,7 +40,7 @@ export async function evaluatePaymentController(req, res, next) {
       success: true,
       requestId,
       evaluatedAt: new Date().toISOString(),
-      service: "SENTINEL-402",
+      service: "TXFORT-402",
       merchantId: result.merchantId ?? null,
       decision: result.decision,
       approved: result.approved,

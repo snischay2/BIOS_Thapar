@@ -130,7 +130,7 @@ export async function requestPaidWeather({
 
         if (!decision.approved) {
           console.warn(
-            "SENTINEL BLOCKED PAYMENT:",
+            "TXFORT BLOCKED PAYMENT:",
             decision.reasons
           );
 
@@ -184,7 +184,7 @@ export async function requestPaidWeather({
           reservation.reservation.reservationId;
 
         console.log(
-          "SENTINEL APPROVED:",
+          "TXFORT APPROVED:",
           reservationId
         );
 
@@ -326,7 +326,7 @@ export async function requestPaidWeather({
   // SETTLEMENT DIAGNOSTICS
   // ==========================================
 
-  console.log("[SENTINEL X402 SETTLEMENT]", {
+  console.log("[TXFORT X402 SETTLEMENT]", {
     httpStatus: response.status,
     responseOk: response.ok,
     paymentResponsePresent: Boolean(paymentResponseHeader),
@@ -422,7 +422,7 @@ export async function requestPaidWeather({
     }
 
     console.error(
-      "[SENTINEL PAYMENT REJECTED]",
+      "[TXFORT PAYMENT REJECTED]",
       errorReason
     );
 
@@ -461,7 +461,7 @@ export async function requestPaidWeather({
 
   if (!reservationId) {
     throw new Error(
-      "Settlement arrived without a SENTINEL reservation"
+      "Settlement arrived without a TXFORT reservation"
     );
   }
 
@@ -490,7 +490,7 @@ export async function requestPaidWeather({
       reservationId,
       settlement,
       message:
-        "Settlement receipt failed SENTINEL verification. Budget remains reserved pending reconciliation."
+        "Settlement receipt failed TXFORT verification. Budget remains reserved pending reconciliation."
     };
   }
 

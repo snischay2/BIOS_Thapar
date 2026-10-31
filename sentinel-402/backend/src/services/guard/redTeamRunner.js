@@ -21,7 +21,7 @@ const controlScenario = createScenario();
 const controlResult = evaluateScenario(controlScenario);
 const controlDecision = getDecision(controlResult);
 
-console.log("\n========== SENTINEL 402 RED TEAM ==========\n");
+console.log("\n========== TXFORT RED TEAM ==========\n");
 console.log(`Legitimate payment control: ${controlDecision}`);
 
 if (controlDecision !== "ALLOW") {

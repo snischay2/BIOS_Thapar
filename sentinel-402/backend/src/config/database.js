@@ -33,7 +33,7 @@ export async function connectDatabase() {
     ]);
 
     console.log("MongoDB connected successfully");
-    console.log("SENTINEL database indexes initialized");
+    console.log("TXFORT database indexes initialized");
 
   } catch (error) {
     console.error(

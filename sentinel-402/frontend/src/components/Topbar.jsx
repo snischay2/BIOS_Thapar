@@ -23,7 +23,7 @@ export default function Topbar({ onMenu }) {
           <Menu size={22} />
         </button>
         <div className="min-w-0">
-          <div className="topbar-breadcrumb">SENTINEL / <span>{title.toUpperCase()}</span></div>
+          <div className="topbar-breadcrumb">TXFORT / <span>{title.toUpperCase()}</span></div>
           <h1>{title}</h1>
           <p className="topbar-subtitle">{subtitle}</p>
         </div>

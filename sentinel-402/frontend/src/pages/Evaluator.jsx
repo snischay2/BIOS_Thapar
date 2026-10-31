@@ -206,8 +206,8 @@ export default function Evaluator() {
           </div>
           <h2>Guard <span>Evaluator</span></h2>
           <p>
-            Run SENTINEL's adversarial suite against another team's guard, and expose
-            our own evaluator API so other teams can test SENTINEL.
+            Run TXFORT's adversarial suite against another team's guard, and expose
+            our own evaluator API so other teams can test TXFORT.
           </p>
         </div>
         <div className="evaluator-title-icon"><Crosshair size={29} /></div>
@@ -219,7 +219,7 @@ export default function Evaluator() {
           <div className="team-eyebrow">SHARED INTEROPERABILITY PROTOCOL</div>
           <h3>X402 RED / BLUE V1</h3>
           <p>
-            One compatible protocol for both directions: SENTINEL sends each challenge
+            One compatible protocol for both directions: TXFORT sends each challenge
             to a remote guard, and our public endpoint evaluates challenges sent to us.
           </p>
         </div>
@@ -235,7 +235,7 @@ export default function Evaluator() {
           <div className="ev-card-title">
             <div className="team-eyebrow">INBOUND · LET OTHER TEAMS TEST US</div>
             <h3>Our public evaluator endpoint</h3>
-            <p>Share this URL with other teams. They can POST x402 challenges and receive SENTINEL's ALLOW/BLOCK decision.</p>
+            <p>Share this URL with other teams. They can POST x402 challenges and receive TXFORT's ALLOW/BLOCK decision.</p>
           </div>
           <span className="ev-live-state"><span /> {loadingInfo ? "CONNECTING" : publicEndpoint ? "API AVAILABLE" : "UNAVAILABLE"}</span>
         </div>
@@ -292,7 +292,7 @@ export default function Evaluator() {
             <div>
               <div className="team-eyebrow">OUTBOUND · WE TEST THEM</div>
               <h3>Test another team's guard</h3>
-              <p>Enter the compatible endpoint provided by the other team. SENTINEL will send the 29-case suite.</p>
+              <p>Enter the compatible endpoint provided by the other team. TXFORT will send the 29-case suite.</p>
             </div>
             <Globe2 size={25} />
           </div>
@@ -356,7 +356,7 @@ export default function Evaluator() {
           <div className="ev-incoming-heading">
             <div>
               <div className="team-eyebrow">INBOUND ACTIVITY</div>
-              <h3>Teams testing SENTINEL</h3>
+              <h3>Teams testing TXFORT</h3>
               <p>Every challenge received by our public endpoint appears here.</p>
             </div>
             <button
@@ -394,7 +394,7 @@ export default function Evaluator() {
               <span>No external evaluation requests received yet. Share the public endpoint to invite teams.</span>
             </div>
           )}
-          <div className="ev-incoming-footer"><Activity size={14} /> Stored from incoming requests to SENTINEL's evaluator API</div>
+          <div className="ev-incoming-footer"><Activity size={14} /> Stored from incoming requests to TXFORT's evaluator API</div>
         </section>
       </div>
 

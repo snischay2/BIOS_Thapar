@@ -5,8 +5,8 @@ import EvaluatorRun from "../models/EvaluatorRun.js";
 import {
   EVALUATOR_PROTOCOL,
   assessIncomingChallenge,
-  getSentinelFixture,
-  getSentinelSuiteFixtures,
+  getTXFORTFixture,
+  getTXFORTSuiteFixtures,
   getEvaluatorSuiteCounts,
   runExternalEvaluation
 } from "../services/evaluator/evaluatorEngine.js";
@@ -31,7 +31,7 @@ const inboundLimiter = rateLimit({
   legacyHeaders: false,
   message: {
     success: false,
-    message: "SENTINEL public evaluator rate limit exceeded."
+    message: "TXFORT public evaluator rate limit exceeded."
   }
 });
 
@@ -54,7 +54,7 @@ router.get("/info", (req, res) => {
 
   return res.json({
     success: true,
-    service: "SENTINEL-402",
+    service: "TXFORT-402",
     protocol: EVALUATOR_PROTOCOL,
     suite: { id: EVALUATOR_PROTOCOL, ...suite },
     publicEndpoint,
@@ -69,7 +69,7 @@ router.get("/info", (req, res) => {
 router.get("/v1/health", (req, res) => {
   return res.json({
     success: true,
-    guard: "SENTINEL-402",
+    guard: "TXFORT-402",
     protocol: EVALUATOR_PROTOCOL,
     endpoint: "/api/evaluator/v1/assess",
     decisionValues: ["ALLOW", "BLOCK"]
@@ -80,19 +80,19 @@ router.get("/v1/health", (req, res) => {
 router.get("/v1/fixture", inboundLimiter, (req, res) => {
   return res.json({
     success: true,
-    guard: "SENTINEL-402",
-    ...getSentinelFixture(),
+    guard: "TXFORT-402",
+    ...getTXFORTFixture(),
     note: "Reference challenge only. It cannot trigger or authorize a payment."
   });
 });
 
-// GET /api/evaluator/v1/suite — public challenge inputs for teams testing SENTINEL.
+// GET /api/evaluator/v1/suite — public challenge inputs for teams testing TXFORT.
 // Expected decisions and scenario labels are intentionally not exposed.
 router.get("/v1/suite", inboundLimiter, (req, res) => {
-  const cases = getSentinelSuiteFixtures();
+  const cases = getTXFORTSuiteFixtures();
   return res.json({
     success: true,
-    guard: "SENTINEL-402",
+    guard: "TXFORT-402",
     protocol: EVALUATOR_PROTOCOL,
     count: cases.length,
     cases,
@@ -153,12 +153,12 @@ router.post("/v1/assess", inboundLimiter, async (req, res) => {
     console.error("[INBOUND EVALUATOR]", error);
     return res.status(500).json({
       success: false,
-      message: "SENTINEL could not assess this challenge."
+      message: "TXFORT could not assess this challenge."
     });
   }
 });
 
-// POST /api/evaluator/run — SENTINEL tests another team's compatible guard.
+// POST /api/evaluator/run — TXFORT tests another team's compatible guard.
 router.post("/run", outboundLimiter, async (req, res) => {
   try {
     const teamName = typeof req.body?.teamName === "string"
@@ -210,7 +210,7 @@ router.post("/run", outboundLimiter, async (req, res) => {
   }
 });
 
-// GET /api/evaluator/incoming?limit=10 — recent teams/cases that tested SENTINEL.
+// GET /api/evaluator/incoming?limit=10 — recent teams/cases that tested TXFORT.
 router.get("/incoming", async (req, res) => {
   try {
     const requested = Number.parseInt(req.query.limit, 10);

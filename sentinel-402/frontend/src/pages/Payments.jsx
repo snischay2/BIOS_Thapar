@@ -395,7 +395,7 @@ export default function Payments() {
           <strong>Backend-controlled wallet signing</strong>
           <p>
             Your private key stays inside the backend environment.
-            Sentinel checks the payment challenge before the agent signs.
+            TXFORT checks the payment challenge before the agent signs.
           </p>
         </div>
       </div>
@@ -411,7 +411,7 @@ export default function Payments() {
             <div>
               <div className="payment-eyebrow">DEMO MERCHANT</div>
               <h3>Premium Weather API</h3>
-              <p>x402-protected resource hosted by Sentinel.</p>
+              <p>x402-protected resource hosted by TXFORT.</p>
             </div>
 
             <div className="payment-merchant-icon">
@@ -614,7 +614,7 @@ export default function Payments() {
 
       <div className="payment-disclaimer">
         <ShieldCheck size={15} />
-        Sentinel does not expose signing keys to the frontend.
+        TXFORT does not expose signing keys to the frontend.
         All payment authorization is performed by the backend agent.
       </div>
     </div>

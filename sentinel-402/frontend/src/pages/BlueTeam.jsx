@@ -110,7 +110,7 @@ export default function BlueTeam() {
       setBackend("offline");
       setError(
         err.response?.data?.message ||
-        "The Sentinel backend is currently unreachable."
+        "The TXFORT backend is currently unreachable."
       );
     } finally {
       setCheckedAt(new Date());
@@ -176,7 +176,7 @@ export default function BlueTeam() {
 
           <p>
             {backend === "online"
-              ? "The Sentinel API health endpoint is responding successfully."
+              ? "The TXFORT API health endpoint is responding successfully."
               : backend === "checking"
                 ? "Waiting for the health endpoint response."
                 : "Start the backend and verify the API before running payment tests."}

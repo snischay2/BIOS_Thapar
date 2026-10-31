@@ -38,7 +38,7 @@ function Brand({ dark = false }) {
         <div className={`font-['Space_Grotesk'] text-[17px] font-bold tracking-tight ${
           dark ? "text-[#352920]" : "text-[#fff9ed]"
         }`}>
-          SENTINEL <span className={dark ? "text-[#e9623d]" : "text-[#ffe09a]"}>402</span>
+          TXFORT <span className={dark ? "text-[#e9623d]" : "text-[#ffe09a]"}>402</span>
         </div>
         <div className={`mt-0.5 text-[8px] font-extrabold tracking-[1.6px] ${
           dark ? "text-[#a08b78]" : "text-[#ffe0cb]"
@@ -215,7 +215,7 @@ export default function HomePage() {
             </h1>
 
             <p className="mt-7 max-w-[570px] text-[14px] leading-8 text-[#ffe7d9] sm:text-[15px]">
-              AI agents are becoming economic actors. Sentinel 402 protects
+              AI agents are becoming economic actors. TXFORT protects
               their wallets against overpayment and wrong-party attacks —
               then puts every guard to the test.
             </p>
@@ -225,7 +225,7 @@ export default function HomePage() {
                 to={appLink}
                 className="inline-flex items-center gap-3 rounded-xl bg-[#fff0cf] px-5 py-4 text-[12px] font-black text-[#783e29] shadow-xl transition hover:-translate-y-1 hover:shadow-2xl"
               >
-                Explore Sentinel <ArrowRight size={17} />
+                Explore TXFORT <ArrowRight size={17} />
               </Link>
 
               <Link
@@ -333,7 +333,7 @@ export default function HomePage() {
             </h2>
             <p className="mt-4 text-[13px] leading-7 text-[#938373]">
               A security guard is only as strong as the attacks it can
-              withstand. Sentinel brings both roles into one testable system.
+              withstand. TXFORT brings both roles into one testable system.
             </p>
           </div>
 
@@ -561,7 +561,7 @@ export default function HomePage() {
             <div className="mt-6 flex items-start gap-3 rounded-xl border border-[#e9d7c4] bg-[#fffaf2] p-4">
               <LockKeyhole size={20} className="mt-0.5 flex-shrink-0 text-[#c76a44]" />
               <p className="text-[11px] leading-6 text-[#8c7561]">
-                Sentinel 402 focuses on wallet-level payment controls and
+                TXFORT focuses on wallet-level payment controls and
                 security evaluation for x402 agent payments. It is a
                 prototype contributing to this goal, not a complete
                 solution to illicit financial flows.
@@ -592,7 +592,7 @@ export default function HomePage() {
         </div>
 
         <div className="mx-auto mt-8 flex max-w-[1200px] flex-col justify-between gap-3 border-t border-white/15 pt-6 text-[9px] font-bold tracking-wider text-[#bba897] sm:flex-row">
-          <span>© 2026 SENTINEL 402 · BIOS HACKATHON</span>
+          <span>© 2026 TXFORT · BIOS HACKATHON</span>
           <span>x402 RED / BLUE · SDG 16.4</span>
         </div>
       </footer>

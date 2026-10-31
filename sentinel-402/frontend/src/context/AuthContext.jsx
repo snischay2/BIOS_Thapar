@@ -15,7 +15,7 @@ export function AuthProvider({ children }) {
   const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("sentinel_token");
+    const token = localStorage.getItem("TXFORT_token");
 
     if (!token) {
       setInitializing(false);
@@ -27,7 +27,7 @@ export function AuthProvider({ children }) {
         setUser(response.data.user);
       })
       .catch(() => {
-        localStorage.removeItem("sentinel_token");
+        localStorage.removeItem("TXFORT_token");
         setUser(null);
       })
       .finally(() => {
@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
   async function login(credentials) {
     const response = await api.post("/auth/login", credentials);
 
-    localStorage.setItem("sentinel_token", response.data.token);
+    localStorage.setItem("TXFORT_token", response.data.token);
     setUser(response.data.user);
 
     return response.data;
@@ -47,14 +47,14 @@ export function AuthProvider({ children }) {
   async function register(details) {
     const response = await api.post("/auth/register", details);
 
-    localStorage.setItem("sentinel_token", response.data.token);
+    localStorage.setItem("TXFORT_token", response.data.token);
     setUser(response.data.user);
 
     return response.data;
   }
 
   function logout() {
-    localStorage.removeItem("sentinel_token");
+    localStorage.removeItem("TXFORT_token");
     setUser(null);
   }
 

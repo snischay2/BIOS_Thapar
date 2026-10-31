@@ -10,7 +10,7 @@ try {
 
   app.listen(PORT, () => {
     console.log("--------------------------------");
-    console.log("SENTINEL 402 BACKEND");
+    console.log("TXFORT BACKEND");
     console.log("MongoDB: Connected");
     console.log(`Port: ${PORT}`);
     console.log("--------------------------------");

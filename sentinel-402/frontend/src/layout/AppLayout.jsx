@@ -17,7 +17,7 @@ export default function AppLayout() {
           <Outlet />
         </div>
         <footer className="app-footer">
-          <span>© 2026 SENTINEL 402</span>
+          <span>© 2026 TXFORT</span>
           <span>Autonomous payment protection · SDG 16.4</span>
           <span>TESTNET ENVIRONMENT</span>
         </footer>

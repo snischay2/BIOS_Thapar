@@ -10,7 +10,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("sentinel_token");
+  const token = localStorage.getItem("TXFORT_token");
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

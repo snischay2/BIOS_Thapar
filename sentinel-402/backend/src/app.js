@@ -40,7 +40,7 @@ const paymentLimiter = rateLimit({
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
-    service: "SENTINEL-402",
+    service: "TXFORT-402",
     message: "Backend is running",
     timestamp: new Date().toISOString()
   });

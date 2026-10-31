@@ -167,7 +167,7 @@ async function callRemoteGuard({ endpointUrl, evaluationId, testCase }) {
       body: JSON.stringify({
         protocol: EVALUATOR_PROTOCOL,
         evaluationId,
-        teamName: "SENTINEL 402",
+        teamName: "TXFORT",
         caseId: randomUUID(),
         paymentRequired: testCase.scenario.paymentRequired
       })
@@ -361,7 +361,7 @@ export async function runExternalEvaluation({ teamName, endpointUrl }) {
 
 /**
  * Assess one challenge sent by another team's evaluator.
- * Policy and merchant allowlists are taken from SENTINEL's trusted fixture;
+ * Policy and merchant allowlists are taken from TXFORT's trusted fixture;
  * caller-supplied policy data is intentionally ignored.
  */
 export async function assessIncomingChallenge({
@@ -416,7 +416,7 @@ export async function assessIncomingChallenge({
 
   return {
     protocol: EVALUATOR_PROTOCOL,
-    guard: "SENTINEL-402",
+    guard: "TXFORT-402",
     evaluationId: safeEvaluationId,
     caseId: safeCaseId,
     decision,
@@ -431,7 +431,7 @@ export function getEvaluatorSuiteCounts() {
   return { attackCases: redTeamAttacks.length, controlCases: 1, totalCases: redTeamAttacks.length + 1 };
 }
 
-export function getSentinelFixture() {
+export function getTXFORTFixture() {
   const scenario = createScenario();
   return {
     protocol: EVALUATOR_PROTOCOL,
@@ -439,8 +439,8 @@ export function getSentinelFixture() {
   };
 }
 
-/** Public attack/control inputs for other teams to submit to SENTINEL. */
-export function getSentinelSuiteFixtures() {
+/** Public attack/control inputs for other teams to submit to TXFORT. */
+export function getTXFORTSuiteFixtures() {
   return createSuite().map((testCase, index) => ({
     caseId: `CASE_${String(index + 1).padStart(3, "0")}`,
     paymentRequired: testCase.scenario.paymentRequired

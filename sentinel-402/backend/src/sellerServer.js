@@ -69,7 +69,7 @@ const paymentRoutes = {
       }
     ],
 
-    description: "SENTINEL 402 demo weather API",
+    description: "TXFORT demo weather API",
 
     mimeType: "application/json"
   }
@@ -87,7 +87,7 @@ app.use(
 app.get("/weather", (req, res) => {
   return res.status(200).json({
     success: true,
-    service: "SENTINEL Merchant",
+    service: "TXFORT Merchant",
 
     report: {
       city: "Jalandhar",
@@ -111,7 +111,7 @@ app.get("/health", (req, res) => {
 
 app.listen(PORT, () => {
   console.log("------------------------------------");
-  console.log("SENTINEL 402 MERCHANT SERVER");
+  console.log("TXFORT MERCHANT SERVER");
   console.log(`Port: ${PORT}`);
   console.log(`Network: ${NETWORK}`);
   console.log(`Facilitator: ${FACILITATOR_URL}`);

@@ -93,7 +93,7 @@ function WorkspaceLayout() {
             <ShieldCheck size={23} />
           </div>
           <div>
-            <strong>SENTINEL <span>402</span></strong>
+            <strong>TXFORT <span>402</span></strong>
             <small>PAYMENT SECURITY</small>
           </div>
         </NavLink>
@@ -101,7 +101,7 @@ function WorkspaceLayout() {
         <div className="dash-workspace">
           <div className="workspace-avatar">S</div>
           <div>
-            <strong>Sentinel Workspace</strong>
+            <strong>TXFORT Workspace</strong>
             <small>Base Sepolia · Testnet</small>
           </div>
           <span className="workspace-dot" />
@@ -144,7 +144,7 @@ function WorkspaceLayout() {
             </div>
 
             <div className="dash-profile-info">
-              <strong>{user?.name || "Sentinel User"}</strong>
+              <strong>{user?.name || "TXFORT User"}</strong>
               <small>{user?.email}</small>
             </div>
 
@@ -163,7 +163,7 @@ function WorkspaceLayout() {
         <header className="dash-topbar">
           <div>
             <div className="dash-breadcrumb">
-              SENTINEL <span>/</span> SECURITY WORKSPACE
+              TXFORT <span>/</span> SECURITY WORKSPACE
             </div>
             <h1>Payment Security Console</h1>
           </div>
@@ -183,7 +183,7 @@ function WorkspaceLayout() {
         <Outlet />
 
         <footer className="dash-footer">
-          <span>© 2026 SENTINEL 402</span>
+          <span>© 2026 TXFORT</span>
           <span>BUILT FOR x402 · BIOS HACKATHON</span>
           <span>SDG 16.4</span>
         </footer>

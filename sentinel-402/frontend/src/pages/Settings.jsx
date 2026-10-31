@@ -95,7 +95,7 @@ export default function SettingsPage() {
   const [lastChecked, setLastChecked] = useState(null);
   const [backendError, setBackendError] = useState("");
 
-  const tokenPresent = Boolean(localStorage.getItem("sentinel_token"));
+  const tokenPresent = Boolean(localStorage.getItem("TXFORT_token"));
 
   async function checkBackend() {
     setBackendStatus("checking");
@@ -177,7 +177,7 @@ export default function SettingsPage() {
           <small>
             {backendError ||
               (backendStatus === "online"
-                ? "SENTINEL 402 health endpoint responded successfully."
+                ? "TXFORT health endpoint responded successfully."
                 : "Waiting for backend health response.")}
           </small>
         </div>

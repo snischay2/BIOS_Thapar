@@ -6,6 +6,7 @@ import rateLimit from "express-rate-limit";
 import paymentRoutes from "./routes/paymentRoutes.js";
 
 import agentRoutes from "./routes/agentRoutes.js";
+import redBlueRoutes from "./routes/redBlueRoutes.js";
 
 const app = express();
 
@@ -58,6 +59,8 @@ app.use(
   paymentLimiter,
   paymentRoutes
 );
+
+app.use("/api/red-blue", redBlueRoutes);
 
 // Agent routes
 app.use(

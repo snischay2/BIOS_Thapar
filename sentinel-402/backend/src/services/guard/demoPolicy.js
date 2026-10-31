@@ -1,45 +1,28 @@
-const merchantPayTo = process.env.MERCHANT_PAY_TO;
 
-const usdcAddress =
-  process.env.BASE_SEPOLIA_USDC_ADDRESS ||
-  "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
-
-const merchantOrigin =
-  process.env.MERCHANT_ORIGIN ||
-  "http://localhost:5001";
+const MERCHANT_WALLET = "0x179f0073e4105b37dadb28e87D581Aa443D81986";
 
 export const demoPolicy = {
   agentId: "agent-001",
 
   allowedSchemes: ["exact"],
-
-  allowedNetworks: [
-    "eip155:84532"
-  ],
+  allowedNetworks: ["eip155:84532"],
 
   allowedAssets: [
-    usdcAddress
+    "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
   ],
 
-  allowedRecipients: merchantPayTo
-    ? [merchantPayTo]
-    : [],
+  allowedRecipients: [MERCHANT_WALLET],
 
   maxPaymentAtomic: "500000",
-
   dailyLimitAtomic: "2000000",
-
   spentTodayAtomic: "0",
-
   maxTimeoutSeconds: 300
 };
 
 export const demoMerchants = [
   {
     id: "local-weather-demo",
-
-    origin: merchantOrigin,
-
-    expectedPayTo: merchantPayTo
+    origin: "http://localhost:5001",
+    expectedPayTo: MERCHANT_WALLET
   }
 ];

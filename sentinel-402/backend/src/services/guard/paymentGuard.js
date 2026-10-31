@@ -1,3 +1,4 @@
+
 import { isAddress } from "viem";
 
 function block(code, message) {
@@ -17,7 +18,7 @@ function addressEquals(a, b) {
   );
 }
 
-function validPositiveInteger(value) {
+function isPositiveIntegerString(value) {
   return (
     typeof value === "string" &&
     /^\d+$/.test(value) &&
@@ -25,18 +26,38 @@ function validPositiveInteger(value) {
   );
 }
 
+function validLimit(value) {
+  return (
+    typeof value === "string" &&
+    /^\d+$/.test(value)
+  );
+}
+
+function validPolicy(policy) {
+  if (!policy || typeof policy !== "object") return false;
+
+  return (
+    Array.isArray(policy.allowedSchemes) &&
+    Array.isArray(policy.allowedNetworks) &&
+    Array.isArray(policy.allowedAssets) &&
+    Array.isArray(policy.allowedRecipients) &&
+    validLimit(policy.maxPaymentAtomic) &&
+    validLimit(policy.dailyLimitAtomic) &&
+    validLimit(policy.spentTodayAtomic) &&
+    Number.isSafeInteger(policy.maxTimeoutSeconds) &&
+    policy.maxTimeoutSeconds > 0
+  );
+}
+
 function isTrustedResource(resourceUrl, merchants) {
   try {
     const url = new URL(resourceUrl);
 
-    const secureProtocol =
-      url.protocol === "https:";
+    const secureProtocol = url.protocol === "https:";
 
     const localDevelopment =
       url.protocol === "http:" &&
-      ["localhost", "127.0.0.1", "::1"].includes(
-        url.hostname
-      );
+      ["localhost", "127.0.0.1", "::1"].includes(url.hostname);
 
     if (
       (!secureProtocol && !localDevelopment) ||
@@ -47,11 +68,22 @@ function isTrustedResource(resourceUrl, merchants) {
     }
 
     return merchants.find(merchant => {
-      const trustedOrigin = new URL(
-        merchant.origin
-      );
+      if (!merchant || typeof merchant.origin !== "string") {
+        return false;
+      }
 
-      return trustedOrigin.origin === url.origin;
+      const trustedOrigin = new URL(merchant.origin);
+
+      if (trustedOrigin.origin !== url.origin) {
+        return false;
+      }
+
+      // Optional strict endpoint allowlist.
+      if (Array.isArray(merchant.allowedPaths)) {
+        return merchant.allowedPaths.includes(url.pathname);
+      }
+
+      return true;
     }) ?? null;
 
   } catch {
@@ -63,10 +95,16 @@ function inspectRequirement(requirement, policy, merchant) {
   const errors = [];
 
   if (!requirement || typeof requirement !== "object") {
-    return [{ code: "INVALID_REQUIREMENT", message: "Invalid payment option" }];
+    return [{
+      code: "INVALID_REQUIREMENT",
+      message: "Invalid payment option"
+    }];
   }
 
-  if (!policy.allowedSchemes.includes(requirement.scheme)) {
+  if (
+    typeof requirement.scheme !== "string" ||
+    !policy.allowedSchemes.includes(requirement.scheme)
+  ) {
     errors.push({
       code: "UNAUTHORIZED_SCHEME",
       message: "Payment scheme is not approved"
@@ -74,6 +112,7 @@ function inspectRequirement(requirement, policy, merchant) {
   }
 
   if (
+    typeof requirement.network !== "string" ||
     !policy.allowedNetworks.includes(requirement.network)
   ) {
     errors.push({
@@ -85,8 +124,8 @@ function inspectRequirement(requirement, policy, merchant) {
   if (
     typeof requirement.asset !== "string" ||
     !isAddress(requirement.asset, { strict: false }) ||
-    !policy.allowedAssets.some(
-      asset => addressEquals(asset, requirement.asset)
+    !policy.allowedAssets.some(asset =>
+      addressEquals(asset, requirement.asset)
     )
   ) {
     errors.push({
@@ -95,9 +134,7 @@ function inspectRequirement(requirement, policy, merchant) {
     });
   }
 
-  if (
-    !validPositiveInteger(requirement.amount)
-  ) {
+  if (!isPositiveIntegerString(requirement.amount)) {
     errors.push({
       code: "INVALID_AMOUNT",
       message: "Payment amount must be a positive integer string"
@@ -126,12 +163,10 @@ function inspectRequirement(requirement, policy, merchant) {
   if (
     typeof requirement.payTo !== "string" ||
     !isAddress(requirement.payTo, { strict: false }) ||
-    !addressEquals(
-      requirement.payTo,
-      merchant.expectedPayTo
-    ) ||
-    !policy.allowedRecipients.some(
-      address => addressEquals(address, requirement.payTo)
+    !isAddress(merchant.expectedPayTo, { strict: false }) ||
+    !addressEquals(requirement.payTo, merchant.expectedPayTo) ||
+    !policy.allowedRecipients.some(address =>
+      addressEquals(address, requirement.payTo)
     )
   ) {
     errors.push({
@@ -159,15 +194,16 @@ export function evaluatePaymentRequired({
   policy,
   merchants
 }) {
-  if (!policy || !Array.isArray(merchants)) {
+  if (!validPolicy(policy) || !Array.isArray(merchants)) {
     return block(
       "POLICY_UNAVAILABLE",
-      "Trusted security policy is unavailable"
+      "Trusted security policy is unavailable or malformed"
     );
   }
 
   if (
     !paymentRequired ||
+    typeof paymentRequired !== "object" ||
     paymentRequired.x402Version !== 2
   ) {
     return block(
@@ -212,11 +248,7 @@ export function evaluatePaymentRequired({
     (requirement, index) => ({
       index,
       requirement,
-      errors: inspectRequirement(
-        requirement,
-        policy,
-        merchant
-      )
+      errors: inspectRequirement(requirement, policy, merchant)
     })
   );
 

@@ -1,3 +1,4 @@
+
 import "dotenv/config";
 
 import { randomUUID } from "node:crypto";
@@ -61,14 +62,16 @@ function validateEnvironment() {
   return privateKey;
 }
 
-function readResponseBody(response) {
-  return response.text().then(text => {
-    try {
-      return JSON.parse(text);
-    } catch {
-      return { raw: text };
-    }
-  });
+async function readResponseBody(response) {
+  const text = await response.text();
+
+  if (!text) return {};
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { raw: text };
+  }
 }
 
 export async function requestPaidWeather({
@@ -78,10 +81,8 @@ export async function requestPaidWeather({
 
   const account = privateKeyToAccount(privateKey);
 
-  // Each request gets its own client and reservation context.
   const client = new x402Client();
 
-  // Register only Base Sepolia exact EVM payments.
   registerExactEvmScheme(client, {
     signer: account,
     networks: [NETWORK]
@@ -115,12 +116,7 @@ export async function requestPaidWeather({
           };
         }
 
-        /*
-          Evaluate the exact option selected by
-          the x402 client, not a different option
-          from the accepts array.
-        */
-
+        // Evaluate the exact selected payment option.
         const guardedChallenge = {
           ...paymentRequired,
           accepts: [selectedRequirements]
@@ -152,10 +148,10 @@ export async function requestPaidWeather({
 
         const reservation = await reserveSpend({
           agentId: AGENT_ID,
-
           idempotencyKey,
 
-          amountAtomic: selectedRequirements.amount,
+          amountAtomic:
+            selectedRequirements.amount,
 
           dailyLimitAtomic:
             demoPolicy.dailyLimitAtomic,
@@ -165,11 +161,14 @@ export async function requestPaidWeather({
           resourceUrl:
             paymentRequired.resource.url,
 
-          network: selectedRequirements.network,
+          network:
+            selectedRequirements.network,
 
-          asset: selectedRequirements.asset,
+          asset:
+            selectedRequirements.asset,
 
-          payTo: selectedRequirements.payTo
+          payTo:
+            selectedRequirements.payTo
         });
 
         if (!reservation.approved) {
@@ -189,7 +188,6 @@ export async function requestPaidWeather({
           reservationId
         );
 
-        // Returning normally permits x402 signing.
         return;
 
       } catch (error) {
@@ -256,14 +254,6 @@ export async function requestPaidWeather({
   let response;
 
   try {
-    /*
-      First request gets HTTP 402.
-      x402 SDK processes the challenge.
-      Our hook runs before signing.
-      Approved payment is signed.
-      SDK retries with PAYMENT-SIGNATURE.
-    */
-
     response = await paidFetch(weatherUrl, {
       method: "GET",
       headers: {
@@ -271,25 +261,10 @@ export async function requestPaidWeather({
       }
     });
 
-    console.log("\n========== X402 DEBUG ==========");
-console.log("Final HTTP status:", response.status);
-console.log("Response OK:", response.ok);
-console.log(
-  "PAYMENT-RESPONSE present:",
-  response.headers.has("PAYMENT-RESPONSE")
-);
-
-console.log(
-  "Final response body:",
-  await response.clone().text()
-);
-console.log("================================\n");
-
   } catch (error) {
     /*
       A network error after signing is ambiguous.
-      Keep any reservation pending until settlement
-      can be reconciled.
+      Keep reservation pending for reconciliation.
     */
 
     error.reservationId = reservationId;
@@ -306,57 +281,177 @@ console.log("================================\n");
   // PROCESS SETTLEMENT RESPONSE
   // ==========================================
 
- const paymentResponseHeader =
-  response.headers.get("PAYMENT-RESPONSE");
+  const paymentResponseHeader =
+    response.headers.get("PAYMENT-RESPONSE");
 
-const settlement = paymentResponseHeader
-  ? httpClient.getPaymentSettleResponse(
-      name => response.headers.get(name)
-    )
-  : null;
+  console.log("\n========== X402 DEBUG ==========");
+  console.log("Final HTTP status:", response.status);
+  console.log("Response OK:", response.ok);
+
+  console.log(
+    "PAYMENT-RESPONSE present:",
+    Boolean(paymentResponseHeader)
+  );
+
+  let settlement = null;
+
+  if (paymentResponseHeader) {
+    try {
+      settlement =
+        httpClient.getPaymentSettleResponse(
+          name => response.headers.get(name)
+        );
+
+    } catch (error) {
+      console.error(
+        "Could not parse PAYMENT-RESPONSE:",
+        error.message
+      );
+
+      console.log("================================\n");
+
+      return {
+        success: false,
+        paymentStatus: "PENDING_RECONCILIATION",
+        responseStatus: response.status,
+        reservationId,
+        error: error.message,
+        message:
+          "PAYMENT-RESPONSE received but could not be parsed. Reservation remains pending. Do not retry."
+      };
+    }
+  }
+
+  // ==========================================
+  // SETTLEMENT DIAGNOSTICS
+  // ==========================================
+
+  console.log("[SENTINEL X402 SETTLEMENT]", {
+    httpStatus: response.status,
+    responseOk: response.ok,
+    paymentResponsePresent: Boolean(paymentResponseHeader),
+    success: settlement?.success,
+    errorReason: settlement?.errorReason,
+    transaction: settlement?.transaction,
+    network: settlement?.network,
+    payer: settlement?.payer
+  });
+
+  console.log(
+    "Final response body:",
+    await response.clone().text()
+  );
+
+  console.log("================================\n");
+
+  // ==========================================
+  // NO SETTLEMENT RESPONSE
+  // ==========================================
 
   if (!settlement) {
     return {
       success: false,
       paymentStatus: "UNCONFIRMED",
+      responseStatus: response.status,
       reservationId,
       message:
-        "No PAYMENT-RESPONSE received. Reservation remains pending."
+        "No PAYMENT-RESPONSE received. Reservation remains pending. Reconcile before retrying."
     };
   }
 
+  // ==========================================
+  // FACILITATOR REJECTION
+  // ==========================================
+
   if (settlement.success === false) {
-    if (
-      settlement.errorReason === "settlement_pending"
-    ) {
+    const errorReason =
+      settlement.errorReason ||
+      "unknown_settlement_error";
+
+    // Pending is not a definitive rejection.
+    if (errorReason === "settlement_pending") {
       return {
         success: false,
         paymentStatus: "PENDING_RECONCILIATION",
+        responseStatus: response.status,
         reservationId,
+        transactionHash:
+          settlement.transaction || null,
+        network: settlement.network || null,
+        payer: settlement.payer || null,
+        errorReason,
         settlement,
         message:
-          "Settlement is pending. Spending remains reserved."
+          "Settlement is pending. Budget remains reserved. Do not retry."
       };
     }
 
-    // A definitive failure permits release.
-    if (reservationId) {
-      await releaseSpend({
-        reservationId,
-        agentId: AGENT_ID,
-        reason:
-          settlement.errorReason ||
-          "Facilitator rejected payment"
-      });
+    /*
+      Definitive rejection: release the reservation.
+      If release fails, require reconciliation.
+    */
 
-      reservationReleased = true;
+    if (reservationId && !reservationReleased) {
+      try {
+        await releaseSpend({
+          reservationId,
+          agentId: AGENT_ID,
+          reason: errorReason
+        });
+
+        reservationReleased = true;
+
+      } catch (releaseError) {
+        console.error(
+          "Reservation release failed:",
+          releaseError.message
+        );
+
+        return {
+          success: false,
+          paymentStatus: "PENDING_RECONCILIATION",
+          responseStatus: response.status,
+          reservationId,
+          errorReason,
+          settlement,
+          releaseError: releaseError.message,
+          message:
+            "Facilitator rejected settlement but reservation release failed. Reconcile before retrying."
+        };
+      }
     }
+
+    console.error(
+      "[SENTINEL PAYMENT REJECTED]",
+      errorReason
+    );
 
     return {
       success: false,
       paymentStatus: "FAILED",
+      responseStatus: response.status,
       reservationId,
-      settlement
+      transactionHash:
+        settlement.transaction || null,
+      network: settlement.network || null,
+      payer: settlement.payer || null,
+      errorReason,
+      settlement,
+      message:
+        `Facilitator settlement failed: ${errorReason}`
+    };
+  }
+
+  // Unknown response is not proof of settlement.
+  if (settlement.success !== true) {
+    return {
+      success: false,
+      paymentStatus: "PENDING_RECONCILIATION",
+      responseStatus: response.status,
+      reservationId,
+      settlement,
+      message:
+        "Facilitator did not confirm success. Budget remains reserved pending reconciliation."
     };
   }
 
@@ -391,10 +486,11 @@ const settlement = paymentResponseHeader
     return {
       success: false,
       paymentStatus: "PENDING_RECONCILIATION",
+      responseStatus: response.status,
       reservationId,
       settlement,
       message:
-        "Settlement receipt failed SENTINEL verification. Budget remains reserved."
+        "Settlement receipt failed SENTINEL verification. Budget remains reserved pending reconciliation."
     };
   }
 
@@ -413,10 +509,15 @@ const settlement = paymentResponseHeader
   return {
     success: response.ok,
     paymentStatus: accounting.state,
+    responseStatus: response.status,
     reservationId,
     transactionHash: settlement.transaction,
     network: settlement.network,
     payer: settlement.payer,
-    data
+    settlement,
+    data,
+    message: response.ok
+      ? "x402 payment settled and merchant resource delivered."
+      : "x402 payment settled, but merchant resource response was not successful."
   };
 }

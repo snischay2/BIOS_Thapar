@@ -4,34 +4,28 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
 import paymentRoutes from "./routes/paymentRoutes.js";
-
 import agentRoutes from "./routes/agentRoutes.js";
 import redBlueRoutes from "./routes/redBlueRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import evaluatorRoutes from "./routes/evaluatorRoutes.js";
 
 const app = express();
 
 app.disable("x-powered-by");
+// Configure trust proxy when running behind Render/Railway/another reverse proxy.
+if (process.env.TRUST_PROXY === "true") app.set("trust proxy", 1);
 
-// Security headers
 app.use(helmet());
 
-// Frontend CORS configuration
-app.use(
-  cors({
-    origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-  })
-);
+app.use(cors({
+  origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  maxAge: 600
+}));
 
-// Request body parser
-app.use(
-  express.json({
-    limit: "256kb"
-  })
-);
+app.use(express.json({ limit: "256kb" }));
 
-// Rate limiter for payment evaluation
 const paymentLimiter = rateLimit({
   windowMs: 60 * 1000,
   limit: 60,
@@ -43,7 +37,6 @@ const paymentLimiter = rateLimit({
   }
 });
 
-// Health check
 app.get("/api/health", (req, res) => {
   res.status(200).json({
     success: true,
@@ -53,22 +46,12 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Payment security routes
-app.use(
-  "/api/payment",
-  paymentLimiter,
-  paymentRoutes
-);
-
+app.use("/api/payment", paymentLimiter, paymentRoutes);
+app.use("/api/auth", authRoutes);
 app.use("/api/red-blue", redBlueRoutes);
+app.use("/api/evaluator", evaluatorRoutes);
+app.use("/api/agent", agentRoutes);
 
-// Agent routes
-app.use(
-  "/api/agent",
-  agentRoutes
-);
-
-// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -76,7 +59,6 @@ app.use((req, res) => {
   });
 });
 
-// Global error handler
 app.use((err, req, res, next) => {
   console.error("API error:", err.message);
 

@@ -15,7 +15,6 @@ import {
   ShieldAlert,
   ShieldCheck,
   Wallet,
-  XCircle,
   Zap,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
@@ -258,31 +257,41 @@ export default function BlueTeam() {
           </div>
 
           <div>
-            <div className="team-eyebrow">BLOCKCHAIN INTEGRATION</div>
-            <h3>Settlement verification</h3>
+            <div className="team-eyebrow">BASE SEPOLIA NETWORK</div>
+            <h3>Testnet configuration</h3>
           </div>
 
-          <span className="blue-pending-badge">PENDING INTEGRATION</span>
+          <span className="blue-pending-badge">ACTIVE</span>
         </div>
 
         <p>
-          The current guard validates the x402 payment challenge before
-          authorization. Independent on-chain settlement verification
-          has not yet been integrated.
+          TXFORT uses Base Sepolia for x402 payment authorization and
+          facilitator settlement. These are the network values used by the
+          backend payment guard.
         </p>
 
         <div className="blue-pending-list">
           <div>
-            <XCircle size={16} />
-            Verify transaction receipt and successful status
+            <strong>Network</strong>
+            <span>Base Sepolia</span>
           </div>
           <div>
-            <XCircle size={16} />
-            Verify the expected USDC Transfer event
+            <strong>Chain ID</strong>
+            <span>eip155:84532</span>
           </div>
           <div>
-            <XCircle size={16} />
-            Match actual sender, recipient and amount with the payment reservation
+            <strong>Payment asset</strong>
+            <span>USDC · 0x036CbD53842c5426634e7929541eC2318f3dCF7e</span>
+          </div>
+          <div>
+            <strong>Explorer</strong>
+            <a
+              href="https://sepolia.basescan.org"
+              target="_blank"
+              rel="noreferrer"
+            >
+              sepolia.basescan.org
+            </a>
           </div>
         </div>
       </section>

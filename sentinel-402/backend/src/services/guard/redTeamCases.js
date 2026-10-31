@@ -5,11 +5,13 @@ const MERCHANT_WALLET = "0x179f0073e4105b37dadb28e87D581Aa443D81986";
 const BASE_ASSET = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
 
 export function createScenario() {
+  const merchantOrigin = demoMerchants[0]?.origin || "http://localhost:5001";
+
   return {
     paymentRequired: {
       x402Version: 2,
       resource: {
-        url: "http://localhost:5001/weather"
+        url: `${merchantOrigin.replace(/\/+$/, "")}/weather`
       },
       accepts: [
         {

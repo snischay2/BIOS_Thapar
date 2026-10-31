@@ -15,7 +15,7 @@ import {
 const validChallenge = {
   x402Version: 2,
   resource: {
-    url: "http://localhost:5001/weather"
+    url: `${demoMerchants[0].origin}/weather`
   },
   accepts: [
     {

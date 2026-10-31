@@ -17,12 +17,49 @@ if (process.env.TRUST_PROXY === "true") app.set("trust proxy", 1);
 
 app.use(helmet());
 
-app.use(cors({
-  origin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  maxAge: 600
-}));
+
+// Frontend CORS configuration
+const allowedOrigins = (
+  process.env.CLIENT_ORIGIN || "http://localhost:5173"
+)
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests without browser Origin (e.g. server-to-server)
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(
+        new Error(`CORS blocked origin: ${origin}`)
+      );
+    },
+
+    methods: [
+      "GET",
+      "HEAD",
+      "POST",
+      "PUT",
+      "PATCH",
+      "DELETE",
+      "OPTIONS"
+    ],
+
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-Requested-With"
+    ],
+
+    credentials: true,
+    maxAge: 86400
+  })
+);
+
 
 app.use(express.json({ limit: "256kb" }));
 

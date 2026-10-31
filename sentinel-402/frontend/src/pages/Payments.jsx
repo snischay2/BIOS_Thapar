@@ -22,7 +22,10 @@ import {
 
 import api from "../lib/api";
 
-const MERCHANT_URL = "http://localhost:5001/weather";
+const MERCHANT_URL = `${(
+  import.meta.env.VITE_MERCHANT_BASE_URL ||
+  "http://localhost:5001"
+).replace(/\/+$/, "")}/weather`;
 const NETWORK = "Base Sepolia";
 const PAYMENT_AMOUNT = "0.001 USDC";
 

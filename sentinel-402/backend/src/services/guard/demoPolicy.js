@@ -1,5 +1,7 @@
 
 const MERCHANT_WALLET = "0x179f0073e4105b37dadb28e87D581Aa443D81986";
+const MERCHANT_ORIGIN =
+  process.env.MERCHANT_ORIGIN || "http://localhost:5001";
 
 export const demoPolicy = {
   agentId: "agent-001",
@@ -22,7 +24,7 @@ export const demoPolicy = {
 export const demoMerchants = [
   {
     id: "local-weather-demo",
-    origin: "http://localhost:5001",
+    origin: MERCHANT_ORIGIN.replace(/\/+$/, ""),
     expectedPayTo: MERCHANT_WALLET
   }
 ];

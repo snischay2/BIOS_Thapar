@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: txfort-backend
+    runtime: node
+    rootDir: sentinel-402/backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: MERCHANT_ORIGIN
+        sync: false
+      - key: MERCHANT_PAY_TO
+        sync: false
+      - key: FACILITATOR_URL
+        value: https://x402.org/facilitator
+      - key: PUBLIC_API_BASE_URL
+        sync: false
+      - key: TRUST_PROXY
+        value: "true"
+
+  - type: web
+    name: txfort-merchant
+    runtime: node
+    rootDir: sentinel-402/backend
+    buildCommand: npm install
+    startCommand: npm run seller
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MERCHANT_PAY_TO
+        sync: false
+      - key: FACILITATOR_URL
+        value: https://x402.org/facilitator

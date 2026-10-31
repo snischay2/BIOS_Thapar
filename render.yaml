@@ -12,19 +12,19 @@ services:
       - key: CLIENT_ORIGIN
         sync: false
       - key: CLIENT_ORIGINS
-        sync: false
+        value: https://bios-thapar.vercel.app
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
         sync: false
       - key: MERCHANT_ORIGIN
-        sync: false
+        value: https://merchant-server-4w6t.onrender.com
       - key: MERCHANT_PAY_TO
         sync: false
       - key: FACILITATOR_URL
         value: https://x402.org/facilitator
       - key: PUBLIC_API_BASE_URL
-        sync: false
+        value: https://txfort-api.onrender.com
       - key: TRUST_PROXY
         value: "true"
 

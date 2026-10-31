@@ -19,18 +19,23 @@ app.use(helmet());
 
 
 // Frontend CORS configuration
+const normalizeOrigin = (origin) =>
+  origin.trim().replace(/\/+$/, "");
+
 const allowedOrigins = (
-  process.env.CLIENT_ORIGIN || "http://localhost:5173"
+  process.env.CLIENT_ORIGINS ||
+  process.env.CLIENT_ORIGIN ||
+  "http://localhost:5173"
 )
   .split(",")
-  .map((origin) => origin.trim())
+  .map(normalizeOrigin)
   .filter(Boolean);
 
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests without browser Origin (e.g. server-to-server)
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.includes(normalizeOrigin(origin))) {
         return callback(null, true);
       }
 

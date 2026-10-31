@@ -39,7 +39,12 @@ const AGENT_ID =
   process.env.AGENT_ID || demoPolicy.agentId;
 
 const MERCHANT_ORIGIN =
-  process.env.MERCHANT_ORIGIN;
+  (
+    process.env.MERCHANT_ORIGIN?.trim() ||
+    (process.env.NODE_ENV === "production"
+      ? "https://merchant-server-4w6t.onrender.com"
+      : "")
+  ).replace(/\/+$/, "");
 
 function validateEnvironment() {
   const privateKey = process.env.EVM_PRIVATE_KEY;

@@ -1,7 +1,10 @@
 
 const MERCHANT_WALLET = "0x179f0073e4105b37dadb28e87D581Aa443D81986";
 const MERCHANT_ORIGIN =
-  process.env.MERCHANT_ORIGIN || "http://localhost:5001";
+  process.env.MERCHANT_ORIGIN?.trim() ||
+  (process.env.NODE_ENV === "production"
+    ? "https://merchant-server-4w6t.onrender.com"
+    : "http://localhost:5001");
 
 export const demoPolicy = {
   agentId: "agent-001",

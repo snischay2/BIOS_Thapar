@@ -16,6 +16,12 @@ import {
 
 const app = express();
 
+// Render terminates TLS before forwarding requests to this service.
+// Trust its forwarded protocol so x402 advertises the public HTTPS URL.
+if (process.env.TRUST_PROXY !== "false") {
+  app.set("trust proxy", 1);
+}
+
 app.use((req, res, next) => {
   console.log(`[MERCHANT REQUEST] ${req.method} ${req.originalUrl}`);
 

@@ -665,7 +665,7 @@ This project is licensed under the **ISC License** — see the [LICENSE](https:/
 
 <div align="center">
 
-**Built with  for the BIOS Hackathon 2026**
+**Built with Love for the BIOS Hackathon 2026**
 
 *x402 Red/Blue · SDG 16.4 · Base Sepolia*
 
